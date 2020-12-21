@@ -1,14 +1,28 @@
-table,th,td {
-    border: 4px solid green;
+#list {
     border-collapse: collapse;
-    text-align: center;
+    width: 100%;
 }
+
+#list th {
+    background-color: #00eaef;
+    color: white;
+}
+
+#list th, #list td {
+    border: 1px solid #29a7e1;
+    padding: 5px;
+}
+
+#list tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
 
 header {
     text-align: center;
 }
 
-#search-section {
+/* #search-section {
     padding: 30px;
     display: block;
-}
+} */
