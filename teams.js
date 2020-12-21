@@ -18,6 +18,6 @@ function setTeams(members) {
 
 fetch("data/team.json")
     .then(resp => resp.json())
-    .then((members) => {
+    .then(members => {
         setTeams(members);
     });
