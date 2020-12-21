@@ -1,23 +1,23 @@
 
-function getTeams(members) {
-    return members.map(member => 
+function getPersonsHtml(persons) {
+    return persons.map(person =>
         `<tr>
-            <td>${member.firstName}</td>
-            <td>${member.lastName}</td>
+            <td>${person.firstName}</td>
+            <td>${person.lastName}</td>
             <td>
-                <a href= ${member.github}>here</a>
+                <a href= ${person.github}>here</a>
             </td>
          </tr>`
     ).join("");
 }
 
-function setTeams(members) {
+function insertPersons(persons) {
     const tBody = document.querySelector("#list tbody");
-    tBody.innerHTML = getTeams(members);
+    tBody.innerHTML = getPersonsHtml(persons);
 }
 
 fetch("data/team.json")
-    .then(resp => resp.json())
-    .then(members => {
-        setTeams(members);
+    .then(res => res.json())
+    .then((data) => {
+        insertPersons(data);
     });
