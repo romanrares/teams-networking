@@ -12,6 +12,7 @@
         TEAMS
     </header>
     <div style="margin-bottom: 5px;">
+        <label for="search">Search by Name:</label>
         <input type="text" id="search">
     </div>
 
@@ -22,13 +23,29 @@
                 <th>FirstName</th>
                 <th>LastName</th>
                 <th>Links</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         </tbody>
         <tfoot>
+            <form>
+
+            </form>
+            <td><input type="text" required id="firstName" placeholder="Enter first name"></td>
+            <td><input type="text" required id="lastName" placeholder="Enter last name"></td>
+            <td>
+                <input type="text" required id="link" placeholder="Enter link">
+            </td>
+        </form>
+            <td>
+                <button id="add-member">Add member</button>
+            </td>
+        
         </tfoot>
+        
     </table>
+    <label id="error-label"></label>
 
     <footer>
     </footer>
