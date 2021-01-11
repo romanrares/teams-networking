@@ -1,6 +1,25 @@
+const API = {
+    CREATE: {
+        URL: "http://localhost:3000/teams-json/create",
+        METHOD: "POST"
+    },
+    READ: {
+        URL: "http://localhost:3000/teams-json",
+        METHOD: "GET"
+    },
+    UPDATE: {
+        URL: "http://localhost:3000/teams-json/update",
+        METHOD: "PUT"
+    },
+    DELETE: {
+        URL: "http://localhost:3000/teams-json/delete",
+        METHOD: "DELETE"
+    }
+};
+
 function insertPersons(persons) {
-    const tBody = document.querySelector("#list tbody");
-    tBody.innerHTML = getPersonsHtml(persons);
+    const tbody = document.querySelector('#list tbody');
+    tbody.innerHTML = getPersonsHtml(persons);
 }
 
 function getPersonsHtml(persons) {
@@ -8,66 +27,101 @@ function getPersonsHtml(persons) {
 }
 
 function getPersonHtml(person) {
+    const gitHub = person.gitHub;
     return `<tr>
-    <td>${person.firstName}</td>
-    <td>${person.lastName}</td>
-    <td>
-        <a href= ${person.github}>here</a>
-    </td>
+        <td>${person.firstName}</td>
+        <td>${person.lastName}</td>
+        <td><a target="_blank" href="https://github.com/${gitHub}">Github</a></td>
         <td>
-        <button class="delete-member">Delete</button>
-         </td>
- </tr>`;
+            <a href="#" class="delete-row" data-id="${person.id}">&#10006;</a>
+        </td>
+    </tr>`;
 }
-
-function clearInputFields() {
-    document.querySelectorAll("input").forEach(input => {
-        input.value = "";
-    });
-}
-
 
 let allPersons = [];
 
-fetch("data/team.json")
-    .then(res => res.json())
-    .then((data) => {
-        allPersons = data;
-        insertPersons(data);
-    });
+function loadList() {
+    fetch(API.READ.URL)
+        .then(res => res.json())
+        .then(data => {
+            allPersons = data;
+            insertPersons(data);
+        });
+}
+
+loadList();
 
 function searchPersons(text) {
     text = text.toLowerCase();
-    console.log(text);
+    console.warn("search", text);
     return allPersons.filter(person => {
         return person.firstName.toLowerCase().indexOf(text) > -1 ||
             person.lastName.toLowerCase().indexOf(text) > -1;
     });
 }
 
-const search = document.getElementById("search");
-search.addEventListener("input", e => {
-    const text = e.target.value;
+function saveTeamMember() {
+    const firstName = document.querySelector("#list input[name=firstName]").value;
+    const lastName = document.querySelector("input[name=lastName]").value;
+    const gitHub = document.querySelector("input[name=gitHub]").value;
 
-    const filtrate = searchPersons(text);
+    const person = {
+        firstName,
+        lastName,
+        gitHub: gitHub
+    };
+    console.info('saving...', person, JSON.stringify(person));
 
-    insertPersons(filtrate);
-});
+    fetch(API.CREATE.URL, {
+        method: API.CREATE.METHOD,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: API.CREATE.METHOD === "GET" ? null : JSON.stringify(person)
+    })
+        .then(res => res.json())
+        .then(r => {
+            console.warn(r);
+            if (r.success) {
+                loadList();
+            }
+        });
+}
 
-const addMemberButton = document.getElementById("add-member");
-addMemberButton.addEventListener("click", () => {
-    const firstNameValue = document.getElementById("firstName").value;
-    const lastNameValue = document.getElementById("lastName").value;
-    const linkValue = document.getElementById("link").value;
-    const errorField = document.getElementById("error-label");
+function deleteTeamMember(id) {
+    console.warn("delete", id);
+    fetch(API.DELETE.URL, {
+        method: API.DELETE.METHOD,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({id})
+    })
+}
 
-    if (firstNameValue === "" || lastNameValue === "" || linkValue === "") {
-        errorField.innerHTML = "There is at least an empty field!";
-    } else {
-        allPersons.push({ "firstName": firstNameValue, "lastName": lastNameValue, "github": linkValue });
-        insertPersons(allPersons);
-        errorField.innerHTML = "";
-    }
-    clearInputFields();
+function addEventListeners() {
+    const search = document.getElementById('search');
+    search.addEventListener("input", e => {
+        const text = e.target.value;
 
-});
+        const filtrate = searchPersons(text);
+        console.info({ filtrate })
+
+        insertPersons(filtrate);
+    });
+
+    const saveBtn = document.querySelector("#list tfoot button");
+    saveBtn.addEventListener("click", () => {
+        saveTeamMember();
+    });
+
+    const table = document.querySelector("#list tbody");
+    table.addEventListener("click", (e) => {
+        const target = e.target;
+        if (target.matches("a.delete-row")) {
+            const id = target.getAttribute("data-id");
+            deleteTeamMember(id);
+        }
+    });
+}
+addEventListeners();

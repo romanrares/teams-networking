@@ -23,27 +23,22 @@
                 <th>FirstName</th>
                 <th>LastName</th>
                 <th>Links</th>
-                <th>Actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         </tbody>
         <tfoot>
-            <form>
-
-            </form>
-            <td><input type="text" required id="firstName" placeholder="Enter first name"></td>
-            <td><input type="text" required id="lastName" placeholder="Enter last name"></td>
-            <td>
-                <input type="text" required id="link" placeholder="Enter link">
-            </td>
-        </form>
-            <td>
-                <button id="add-member">Add member</button>
-            </td>
-        
+            <tr>
+                <td><input type="text" required name="firstName" placeholder="Enter first name"></td>
+                <td><input type="text" required name="lastName" placeholder="Enter last name"></td>
+                <td><input type="text" required name="gitHub" placeholder="GitHub account"></td>
+                <td>
+                    <button id="add-member">Save</button>
+                </td>
+            </tr>
         </tfoot>
-        
+
     </table>
     <label id="error-label"></label>
 
