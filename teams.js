@@ -95,8 +95,13 @@ function deleteTeamMember(id) {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({id})
-    })
+        body: JSON.stringify({ id })
+    }).then(res => res.json())
+        .then(r => {
+            if (r.success) {
+                loadList();
+            }
+        });
 }
 
 function addEventListeners() {
